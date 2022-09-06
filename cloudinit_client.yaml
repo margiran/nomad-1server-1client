@@ -6,11 +6,7 @@ write_files:
       data_dir = "/opt/nomad"
       client {
         enabled = true
-        server_join{
-          retry_join = [${server_ip}]
-          retry_max = 3
-          retry_interval = "15s"
-        }
+        servers=["${server_ip}"]
       }
     permissions: '0777'
     path: /etc/test.conf

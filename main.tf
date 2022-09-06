@@ -43,10 +43,22 @@ resource "aws_instance" "client" {
 resource "aws_security_group" "instance" {
   name = var.security_group_name
   vpc_id = data.aws_vpc.default.id
+  # ingress {
+  #   from_port   = var.server_port
+  #   to_port     = var.server_port
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
   ingress {
-    from_port   = var.server_port
-    to_port     = var.server_port
+    from_port   = 4646
+    to_port     = 4648
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 4646
+    to_port     = 4648
+    protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
