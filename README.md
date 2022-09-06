@@ -1,7 +1,7 @@
-# nomad one server one client 
+# Nomad one server one client 
 * Running a Nomad server and a client using Terraform  
 
-![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/resources/simple_nomad_cluster.png?raw=true)
+![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/assets/simple_nomad_cluster.png?raw=true)
 
 ## Pre-requisites
 
