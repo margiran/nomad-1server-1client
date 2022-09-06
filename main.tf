@@ -34,7 +34,7 @@ resource "aws_instance" "client" {
   instance_type           = var.instance_type
   vpc_security_group_ids  = [aws_security_group.instance.id]
   key_name                = aws_key_pair.generated_key.key_name
-  user_data               =templatefile("cloudinit_client.yaml",{ server_ip = aws_instance.server.public_ip })
+  user_data               =templatefile("cloudinit_client.yaml",{ server_ip = aws_instance.server.private_ip })
   tags = {
     Name = "nomad client"
   }
