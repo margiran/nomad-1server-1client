@@ -1,0 +1,27 @@
+#cloud-config
+write_files:
+  - content: |
+      # client config file
+      datacenter="dc1"
+      data_dir = "/opt/nomad"
+      client {
+        enabled = true
+        server_join{
+          retry_join = [${server_ip}]
+          retry_max = 3
+          retry_interval = "15s"
+        }
+      }
+    permissions: '0777'
+    path: /etc/test.conf
+runcmd:
+  - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+  - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  - sudo apt-get update
+  - sudo apt-get install -y nomad 
+  - sudo nomad agent -config /etc/test.conf
+  # - sudo systemctl enable nomad
+  # - sudo systemctl start nomad
+# package_update: true
+# package:
+#   - nomad
