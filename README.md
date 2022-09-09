@@ -24,16 +24,42 @@ environment variables:
 export AWS_ACCESS_KEY_ID=(your access key id)
 export AWS_SECRET_ACCESS_KEY=(your secret access key)
 ```
+
 Clone the repository:
 ```
-
 git clone git@github.com:margiran/nomad-1server-1client.git
 cd nomad-1server-1client
 ```
-Build using Terraform:
+
+Build ingrastructure using Terraform:
+```
+terraform init
+terraform apply
+```
+
+Use following commands to capture the private key in a pem file:
+```
+terraform output private_key_pem | grep -v EOT > ~/.ssh/terraform.pem
+chmod 0400 ~/.ssh/terraform.pem
+```
+
+The Outputs gives you the information about created instance you need in order to connect to the instances.
+for simplicity we generate the ssh command, so try :
+```
+terraform output ssh_server_public_ip
+```
+
+Clean up when you're done:
+```
+terraform destroy
+```
+
+# Sample output
+
 ```
 terraform init
 ```
+
 We use our local machine to provision infrastructure we have as code, Terraform needs some binaries in order to interact with the provider API. and by execute `init` command terraform will download needed binaries. 
 this is the output of this command:
 
@@ -50,6 +76,7 @@ this is the output of this command:
 ```
 terraform apply
 ```
+
 when you run the `apply` command terraform will show the plan (a list of resources need to create/change to achieve yor desire state) and ask for your approval, you need to type 'yes':
 ```
     Do you want to perform these actions?
@@ -58,6 +85,7 @@ when you run the `apply` command terraform will show the plan (a list of resourc
 
       Enter a value:  
 ```
+
 At the end terraform will show a message that indicate your infrastructure is ready:
 ```
   Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
@@ -67,20 +95,4 @@ At the end terraform will show a message that indicate your infrastructure is re
    .
    .
    ssh_server_public_ip = "ssh ubuntu@10.10.10.10 -i ~/.ssh/terraform.pem"
-```
-Use following commands to capture the private key in a pem file:
-```
-terraform output private_key_pem | grep -v EOT > ~/.ssh/terraform.pem
-chmod 0400 ~/.ssh/terraform.pem
-```
-The Outputs gives you the information about created instance you need in order to connect to the instances.
-for simplicity we generate the ssh command, so try :
-```
-terraform output ssh_server_public_ip
-```
-Copy the value of "ssh_server_public_ip" and paste it in the command line 
-
-Clean up when you're done:
-```
-terraform destroy
 ```
