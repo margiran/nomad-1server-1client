@@ -6,16 +6,28 @@ terraform {
     }
   }
 }
+
 provider "aws" {
   region = "us-east-2"
 }
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnet_ids" "default" {
+  vpc_id = data.aws_vpc.default.id
+}
+
 resource "tls_private_key" "private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
+
 resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.private_key.public_key_openssh
 }
+
 resource "aws_instance" "server" {
   ami                     = var.ami
   instance_type           = var.instance_type
@@ -26,6 +38,7 @@ resource "aws_instance" "server" {
     Name = "nomad server"
   }
 }
+
 resource "aws_instance" "client" {
   ami                     = var.ami
   instance_type           = var.instance_type
@@ -69,9 +82,4 @@ resource "aws_security_group" "instance" {
     cidr_blocks = [ "0.0.0.0/0" ]
   } 
 }
-data "aws_vpc" "default" {
-  default = true
-}
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
-}
+
