@@ -1,7 +1,7 @@
 variable "security_group_name" {
   description = "The name of the security group"
   type        = string
-  default     = "terraform-nomad-1server-1client"
+  default     = "nomad-1server-1client-sg"
 }
 
 variable "ami" {

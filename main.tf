@@ -31,26 +31,26 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_instance" "server" {
   ami                    = var.ami
   instance_type          = var.instance_type
-  vpc_security_group_ids = [aws_security_group.instance.id]
+  vpc_security_group_ids = [aws_security_group.instances.id]
   key_name               = aws_key_pair.generated_key.key_name
   user_data              = templatefile("cloudinit_server.yaml", { bootstrap_expect = 1 })
   tags = {
-    Name = "nomad server"
+    Name = "nomad server "
   }
 }
 
 resource "aws_instance" "client" {
   ami                    = var.ami
   instance_type          = var.instance_type
-  vpc_security_group_ids = [aws_security_group.instance.id]
+  vpc_security_group_ids = [aws_security_group.instances.id]
   key_name               = aws_key_pair.generated_key.key_name
   user_data              = templatefile("cloudinit_client.yaml", { server_ip = aws_instance.server.private_ip })
   tags = {
-    Name = "nomad client"
+    Name = "nomad client "
   }
 }
 
-resource "aws_security_group" "instance" {
+resource "aws_security_group" "instances" {
   name   = var.security_group_name
   vpc_id = data.aws_vpc.default.id
   # opening port used by nomad agents 
