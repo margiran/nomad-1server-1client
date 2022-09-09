@@ -31,7 +31,7 @@ git clone git@github.com:margiran/nomad-1server-1client.git
 cd nomad-1server-1client
 ```
 
-Build ingrastructure using Terraform:
+Build infrastructure using Terraform:
 ```
 terraform init
 terraform apply
