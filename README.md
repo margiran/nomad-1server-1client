@@ -34,7 +34,7 @@ Build using Terraform:
 ```
 terraform init
 ```
-we use our local machine to provision infrastructure we have as code, Terraform needs some binaries in order to interact with provider API you use in terraform file.
+We use our local machine to provision infrastructure we have as code, Terraform needs some binaries in order to interact with the provider API. and by execute `init` command terraform will download needed binaries. 
 this is the output of this command:
 
     Initializing the backend...
@@ -51,14 +51,15 @@ this is the output of this command:
 terraform apply
 ```
 when you run the `apply` command terraform will show the plan (a list of resources need to create/change to achieve yor desire state) and ask for your approval, you need to type 'yes':
+```
     Do you want to perform these actions?
       Terraform will perform the actions described above.
       Only 'yes' will be accepted to approve.
 
       Enter a value:  
-
+```
 At the end terraform will show a message that indicate your infrastructure is ready:
-
+```
   Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
 
   Outputs:
@@ -66,7 +67,7 @@ At the end terraform will show a message that indicate your infrastructure is re
    .
    .
    ssh_server_public_ip = "ssh ubuntu@10.10.10.10 -i ~/.ssh/terraform.pem"
-
+```
 Use following commands to capture the private key in a pem file:
 ```
 terraform output private_key_pem | grep -v EOT > ~/.ssh/terraform.pem
