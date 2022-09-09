@@ -14,10 +14,6 @@ runcmd:
   - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
   - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
   - sudo apt-get update
-  - sudo apt-get install -y nomad 
-  - sudo nomad agent -config /etc/test.conf
-  # - sudo systemctl enable nomad
-  # - sudo systemctl start nomad
-# package_update: true
-# package:
-#   - nomad
+package_update: true
+package:
+  - nomad

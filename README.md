@@ -1,14 +1,14 @@
-# Nomad one server one client 
-* Running a Nomad server and a client using Terraform  
+# Nomad 
+## one server one client 
+* In order to deploy nomad cluster we are going to use terraform to provision the infrastructure and Run a Nomad server and a client in aws.
 
-![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/diagram/simple_nomad_cluster.png?raw=true)
+![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/diagram/simple_nomad_cluster.jpeg?raw=true)
 
 ## Pre-requisites
 
-* You must have [Terraform](https://www.terraform.io/) installed on your computer. 
+* You must have [Terraform](https://www.terraform.io/downloads) installed on your computer. 
 * You must have an [Amazon Web Services (AWS) account](http://aws.amazon.com/).
 
-Please note that this code was written for Terraform 0.12.x.
 
 ## Quick start
 
@@ -24,18 +24,32 @@ environment variables:
 export AWS_ACCESS_KEY_ID=(your access key id)
 export AWS_SECRET_ACCESS_KEY=(your secret access key)
 ```
+Clone the repository:
+```
 
+git clone git@github.com:margiran/nomad-1server-1client.git
+cd nomad-1server-1client
+```
 Deploy the code:
-
 ```
 terraform init
 terraform apply
 ```
+we use our local machine to provision infrastructure we have as code, Terraform needs some binaries in order to interact with provider API you use in terraform file.  When the `init` command completes, you have all the 
 
 When the `apply` command completes, it will output the public IP address of the server. To test that IP:
 
 ```
-nomad UI: http://(server_public_ip):4646/
+echo $(terraform output private_key_pem) > ~/.ssh/terraform.pem
+```
+
+The server can be accessed by 
+```
+ssh ubuntu@$(terraform output server_public_ip) -i ~/.ssh/terraform.pem
+```
+The client can be accessed by 
+```
+ssh ubuntu@$(terraform output client_public_ip) -i ~/.ssh/terraform.pem
 ```
 
 Clean up when you're done:
