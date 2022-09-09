@@ -1,7 +1,7 @@
 output "private_key_pem" {
   value       = tls_private_key.private_key.private_key_pem
   description = "The private key (save this in a .pem file) for ssh to instances"
-  sensitive = true
+  sensitive   = true
 }
 
 output "server_public_ip" {

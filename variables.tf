@@ -7,13 +7,13 @@ variable "security_group_name" {
 variable "ami" {
   description = "The AMI to run in the cluster"
   type        = string
-  default = "ami-0c55b159cbfafe1f0"
+  default     = "ami-0c55b159cbfafe1f0"
 }
 
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string
-  default = "t2.micro"
+  default     = "t2.micro"
 }
 
 variable "server_port" {

@@ -29,29 +29,29 @@ resource "aws_key_pair" "generated_key" {
 }
 
 resource "aws_instance" "server" {
-  ami                     = var.ami
-  instance_type           = var.instance_type
-  vpc_security_group_ids  = [aws_security_group.instance.id]
-  key_name                = aws_key_pair.generated_key.key_name
-  user_data               = templatefile("cloudinit_server.yaml",{bootstrap_expect = 1})
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.instance.id]
+  key_name               = aws_key_pair.generated_key.key_name
+  user_data              = templatefile("cloudinit_server.yaml", { bootstrap_expect = 1 })
   tags = {
     Name = "nomad server"
   }
 }
 
 resource "aws_instance" "client" {
-  ami                     = var.ami
-  instance_type           = var.instance_type
-  vpc_security_group_ids  = [aws_security_group.instance.id]
-  key_name                = aws_key_pair.generated_key.key_name
-  user_data               =templatefile("cloudinit_client.yaml",{ server_ip = aws_instance.server.private_ip })
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.instance.id]
+  key_name               = aws_key_pair.generated_key.key_name
+  user_data              = templatefile("cloudinit_client.yaml", { server_ip = aws_instance.server.private_ip })
   tags = {
     Name = "nomad client"
   }
 }
 
 resource "aws_security_group" "instance" {
-  name = var.security_group_name
+  name   = var.security_group_name
   vpc_id = data.aws_vpc.default.id
   # opening port used by nomad agents 
   ingress {
@@ -76,10 +76,10 @@ resource "aws_security_group" "instance" {
   }
   # provide internet access to the instance (install packages, etc)
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = [ "0.0.0.0/0" ]
-  } 
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
