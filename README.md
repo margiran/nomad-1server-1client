@@ -1,6 +1,6 @@
 # Nomad 
 ## one server one client 
-* In order to deploy nomad cluster we are going to use terraform to provision the infrastructure and Run a Nomad server and a client in aws.
+* In order to deploy nomad cluster we are using terraform to provision the infrastructure and Run a Nomad server and a client in aws.
 
 ![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/diagram/simple_nomad_cluster.jpeg?raw=true)
 
@@ -30,30 +30,56 @@ Clone the repository:
 git clone git@github.com:margiran/nomad-1server-1client.git
 cd nomad-1server-1client
 ```
-Deploy the code:
+Build using Terraform:
 ```
 terraform init
+```
+we use our local machine to provision infrastructure we have as code, Terraform needs some binaries in order to interact with provider API you use in terraform file.
+this is the output of this command:
+
+    Initializing the backend...
+
+    Initializing provider plugins...
+    - Reusing previous version of hashicorp/aws from the dependency lock file
+    - Reusing previous version of hashicorp/tls from the dependency lock file
+    - Using previously-installed hashicorp/aws v4.29.0
+    - Using previously-installed hashicorp/tls v4.0.2
+
+    Terraform has been successfully initialized!
+
+```
 terraform apply
 ```
-we use our local machine to provision infrastructure we have as code, Terraform needs some binaries in order to interact with provider API you use in terraform file.  When the `init` command completes, you have all the 
+when you run the `apply` command terraform will show the plan (a list of resources need to create/change to achieve yor desire state) and ask for your approval, you need to type 'yes':
+    Do you want to perform these actions?
+      Terraform will perform the actions described above.
+      Only 'yes' will be accepted to approve.
 
-When the `apply` command completes, it will output the public IP address of the server. To test that IP:
+      Enter a value:  
 
-```
-echo $(terraform output private_key_pem) > ~/.ssh/terraform.pem
-```
+At the end terraform will show a message that indicate your infrastructure is ready:
 
-The server can be accessed by 
+  Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
+
+  Outputs:
+   server_public_ip = "10.10.10.10"
+   .
+   .
+   ssh_server_public_ip = "ssh ubuntu@10.10.10.10 -i ~/.ssh/terraform.pem"
+
+Use following commands to capture the private key in a pem file:
 ```
-ssh ubuntu@$(terraform output server_public_ip) -i ~/.ssh/terraform.pem
+terraform output private_key_pem | grep -v EOT > ~/.ssh/terraform.pem
+chmod 0400 ~/.ssh/terraform.pem
 ```
-The client can be accessed by 
+The Outputs gives you the information about created instance you need in order to connect to the instances.
+for simplicity we generate the ssh command, so try :
 ```
-ssh ubuntu@$(terraform output client_public_ip) -i ~/.ssh/terraform.pem
+terraform output ssh_server_public_ip
 ```
+Copy the value of "ssh_server_public_ip" and paste it in the command line 
 
 Clean up when you're done:
-
 ```
 terraform destroy
 ```
