@@ -10,7 +10,7 @@
 
 ## Quick start
 
-## Set the AWS environment variables:
+### Set the AWS environment variables:
 
 Configure your [AWS access 
 keys](http://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys) as 
@@ -20,19 +20,19 @@ export AWS_ACCESS_KEY_ID=(your access key id)
 export AWS_SECRET_ACCESS_KEY=(your secret access key)
 ```
 
-## Clone the repository:
+### Clone the repository:
 
 ```
 git clone git@github.com:margiran/nomad-1server-1client.git
 cd nomad-1server-1client
 ```
-## Build infrastructure using Terraform:
+### Build infrastructure using Terraform:
 
 ```
 terraform init
 terraform apply
 ```
-## Access the cluster
+### Access the cluster
 
 Use following commands to capture the private key in a pem file:
 
@@ -47,12 +47,12 @@ for simplicity we generate the ssh command in an output, so try following comman
 terraform output ssh_server_public_ip
 ```
  
-# Clean up when you're done:
+### Clean up when you're done:
 ```
 terraform destroy
 ```
 
-# Sample output
+### Sample output
 
 ```
 terraform init
