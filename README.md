@@ -1,6 +1,6 @@
 # Provision a Nomad cluster on AWS Using Terraform
 
-![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/diagram/simple_nomad_cluster.jpeg?raw=true)
+![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/diagram/simple_nomad_cluster.png?raw=true)
 
 ## Pre-requisites
 
