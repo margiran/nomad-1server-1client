@@ -52,6 +52,14 @@ resource "aws_security_group" "instances" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  # netdata monitoring
+  ingress {
+    description = "netdata from internet"
+    from_port   = 19999
+    to_port     = 19999
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   # provide internet access to the instance (install packages, etc)
   egress {
     from_port   = 0

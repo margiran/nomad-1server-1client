@@ -45,7 +45,19 @@ output "nomad_addr_server_public_ip" {
   ]
 }
 
+output "netdata_server_public_ip" {
+  description = "Command for netdata to the Server public IP of the EC2 Instance"
+  value = [
+    for k in aws_instance.server : "http://${k.public_ip}:19999"
+  ]
+}
+
 output "ssh_client_public_ip" {
   description = "Command for ssh to the Client public IP of the EC2 Instance"
   value       = "ssh ubuntu@${aws_instance.client.public_ip} -i ~/.ssh/terraform.pem"
+}
+
+output "netdata_client_public_ip" {
+  description = "Command for netdata to the Server public IP of the EC2 Instance"
+  value       = "http://${aws_instance.client.public_ip}:19999"
 }
