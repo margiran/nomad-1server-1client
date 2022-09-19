@@ -15,10 +15,6 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
-}
-
 resource "tls_private_key" "private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -28,30 +24,12 @@ resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.private_key.public_key_openssh
 }
 
-resource "aws_instance" "server" {
-  ami                    = var.ami
-  instance_type          = var.instance_type
-  vpc_security_group_ids = [aws_security_group.instances.id]
-  key_name               = aws_key_pair.generated_key.key_name
-  user_data              = templatefile("cloudinit_server.yaml", { bootstrap_expect = 1 })
-  tags = {
-    Name = "nomad server "
-  }
-}
-
-resource "aws_instance" "client" {
-  ami                    = var.ami
-  instance_type          = var.instance_type
-  vpc_security_group_ids = [aws_security_group.instances.id]
-  key_name               = aws_key_pair.generated_key.key_name
-  user_data              = templatefile("cloudinit_client.yaml", { server_ip = aws_instance.server.private_ip })
-  tags = {
-    Name = "nomad client "
-  }
+resource "random_pet" "pet" {
+  length = 1
 }
 
 resource "aws_security_group" "instances" {
-  name   = var.security_group_name
+  name   = "${var.security_group_name}-${random_pet.pet.id}"
   vpc_id = data.aws_vpc.default.id
   # opening port used by nomad agents 
   ingress {
@@ -83,3 +61,42 @@ resource "aws_security_group" "instances" {
   }
 }
 
+resource "aws_instance" "server" {
+  count                  = var.server_count
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.instances.id]
+  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
+  key_name               = aws_key_pair.generated_key.key_name
+  root_block_device {
+    volume_size = 100
+    volume_type = "io1"
+    iops        = 1000
+  }
+  user_data = templatefile("cloudinit_server.yaml", {
+    bootstrap_expect = var.server_count,
+    retry_join       = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
+  })
+  tags = {
+    Name = "nomad_server_${random_pet.pet.id}"
+  }
+}
+
+resource "aws_instance" "client" {
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.instances.id]
+  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
+  key_name               = aws_key_pair.generated_key.key_name
+  root_block_device {
+    volume_size = 100
+    volume_type = "io1"
+    iops        = 1000
+  }
+  user_data = templatefile("cloudinit_client.yaml", {
+    retry_join = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
+  })
+  tags = {
+    Name = "nomad_client_${random_pet.pet.id}"
+  }
+}
