@@ -16,6 +16,12 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
+variable "server_count" {
+  description = "The number of servers"
+  type        = number
+  default     = 1
+}
+
 variable "server_port" {
   description = "The port the server will use for HTTP requests"
   type        = number

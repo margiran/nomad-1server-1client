@@ -38,7 +38,7 @@ Use following commands to capture the private key in a pem file:
 
 ```
 terraform output private_key_pem | grep -v EOT > ~/.ssh/terraform.pem
-chmod 0400 ~/.ssh/terraform.pem
+chmod 0600 ~/.ssh/terraform.pem
 ```
 
 for simplicity we generate the ssh command in an output, so try following command and use the value of output to ssh to the Nomad server:
