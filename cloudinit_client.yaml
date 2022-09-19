@@ -2,7 +2,7 @@
 write_files:
   - content: |
       # client config file
-      datacenter="dc1"
+      datacenter="aws"
       data_dir  = "/opt/nomad/data"
       bind_addr = "0.0.0.0"
       client {
@@ -33,6 +33,6 @@ runcmd:
 packages_update: true
 packages:
   - unzip
-  - docker
+  - docker.io
   - default-jre
   - default-jdk

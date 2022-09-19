@@ -31,6 +31,20 @@ output "ssh_server_public_ip" {
   ]
 }
 
+output "http_server_public_ip" {
+  description = "Command for http to the Server public IP of the EC2 Instance"
+  value = [
+    for k in aws_instance.server : "http://${k.public_ip}:4646"
+  ]
+}
+
+output "nomad_addr_server_public_ip" {
+  description = "Command for http to the Server public IP of the EC2 Instance"
+  value = [
+    for k in aws_instance.server : "export NOMAD_ADDR=http://${k.public_ip}:4646"
+  ]
+}
+
 output "ssh_client_public_ip" {
   description = "Command for ssh to the Client public IP of the EC2 Instance"
   value       = "ssh ubuntu@${aws_instance.client.public_ip} -i ~/.ssh/terraform.pem"
