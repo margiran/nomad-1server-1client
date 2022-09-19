@@ -8,11 +8,13 @@ write_files:
       server {
         enabled = true
         bootstrap_expect = ${bootstrap_expect}
-      }
-      server_join {
-        retry_join = [ "${retry_join}" ]
-        retry_max = 3
-        retry_interval = "15s"
+        server_join {
+          retry_join = ["${retry_join}"]
+          retry_max = 5
+          retry_interval = "15s"
+        }
+        #if OSS binary is used then the license configuration is ignored
+        #license_path = "/etc/nomad.d/nomad.hclic"
       }
     permissions: '0750'
     path: /etc/nomad.hcl.cloud_init

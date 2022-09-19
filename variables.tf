@@ -19,7 +19,7 @@ variable "instance_type" {
 variable "server_count" {
   description = "The number of servers"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "server_port" {

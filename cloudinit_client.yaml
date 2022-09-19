@@ -7,11 +7,15 @@ write_files:
       bind_addr = "0.0.0.0"
       client {
         enabled = true
-      }
-      server_join {
-        retry_join = [ "${retry_join}" ]
-        retry_max = 3
-        retry_interval = "15s"
+        server_join {
+          retry_join = ["${retry_join}"]
+          retry_max = 5
+          retry_interval = "15s"
+        }
+        options = {
+          "driver.raw_exec" = "1"
+          "driver.raw_exec.enable" = "1"
+        }
       }
     permissions: '0750'
     path: /etc/nomad.hcl.cloud_init

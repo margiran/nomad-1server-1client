@@ -26,7 +26,7 @@ output "client_private_ip" {
 
 output "ssh_server_public_ip" {
   description = "Command for ssh to the Server public IP of the EC2 Instance"
-  value       = [ 
+  value = [
     for k in aws_instance.server : "ssh ubuntu@${k.public_ip} -i ~/.ssh/terraform.pem"
   ]
 }
