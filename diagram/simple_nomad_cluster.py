@@ -11,7 +11,8 @@ with Diagram("Simple Nomad cluster", show=False):
 
     with Cluster("VPC"):
         with Cluster("SubNet"):
-            n_server = Nomad("Nomad server")
+            n_server1 = Nomad("Nomad server1")
+            n_server2 = Nomad("Nomad server2")
             n_client = Nomad("Nomad Client")
 
-            n_server >> Edge(color="darkgreen" ,label="RPC TCP/4647") << n_client
+            [ n_server1, n_server2] - n_client
