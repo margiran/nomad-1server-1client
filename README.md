@@ -44,7 +44,7 @@ chmod 0600 ~/.ssh/terraform.pem
 for simplicity we generate the ssh command in an output, so try following command and use the value of output to ssh to the Nomad server:
 
 ```
-terraform output ssh_server_public_ip
+terraform output ssh_nomad_server_public_ip
 ```
  
 ### Clean up when you're done:
@@ -66,8 +66,8 @@ this is the output of this command:
     Initializing provider plugins...
     - Reusing previous version of hashicorp/aws from the dependency lock file
     - Reusing previous version of hashicorp/tls from the dependency lock file
-    - Using previously-installed hashicorp/aws v4.29.0
-    - Using previously-installed hashicorp/tls v4.0.2
+    - Using previously-installed hashicorp/aws vN.NN.N
+    - Using previously-installed hashicorp/tls vN.NN.N
 
     Terraform has been successfully initialized!
 
@@ -86,11 +86,9 @@ when you run the `apply` command terraform will show the plan (a list of resourc
 
 At the end terraform will show a message that indicate your infrastructure is ready:
 ```
-  Apply complete! Resources: 5 added, 0 changed, 0 destroyed.
-
-  Outputs:
-   server_public_ip = "10.10.10.10"
-   .
-   .
-   ssh_server_public_ip = "ssh ubuntu@10.10.10.10 -i ~/.ssh/terraform.pem"
+  Apply complete! Resources: N added, 0 changed, 0 destroyed.
+  .
+  .
+  .
+  END
 ```

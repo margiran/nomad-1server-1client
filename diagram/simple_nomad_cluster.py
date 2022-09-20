@@ -13,6 +13,6 @@ with Diagram("Simple Nomad cluster", show=False):
         with Cluster("SubNet"):
             n_server1 = Nomad("Nomad server1")
             n_server2 = Nomad("Nomad server2")
-            n_client = Nomad("Nomad Client")
+            n_client = Nomad("Client")
 
             [ n_server1, n_server2] - n_client
