@@ -70,7 +70,7 @@ resource "aws_security_group" "instances" {
 }
 
 resource "aws_instance" "server" {
-  count                  = var.server_count
+  count                  = var.nomad_server_count
   ami                    = var.ami
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.instances.id]
@@ -82,8 +82,8 @@ resource "aws_instance" "server" {
     iops        = 1000
   }
   user_data = templatefile("cloudinit_server.yaml", {
-    bootstrap_expect = var.server_count,
-    retry_join       = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
+    nomad_bootstrap_expect = var.nomad_server_count,
+    nomad_retry_join       = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
   })
   tags = {
     Name = "nomad_server_${random_pet.pet.id}"
@@ -102,7 +102,7 @@ resource "aws_instance" "client" {
     iops        = 1000
   }
   user_data = templatefile("cloudinit_client.yaml", {
-    retry_join = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
+    nomad_retry_join = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
   })
   tags = {
     Name = "nomad_client_${random_pet.pet.id}"

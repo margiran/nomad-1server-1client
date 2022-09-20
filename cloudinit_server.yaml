@@ -7,9 +7,9 @@ write_files:
       bind_addr = "0.0.0.0"
       server {
         enabled = true
-        bootstrap_expect = ${bootstrap_expect}
+        bootstrap_expect = ${nomad_bootstrap_expect}
         server_join {
-          retry_join = ["${retry_join}"]
+          retry_join = ["${nomad_retry_join}"]
           retry_max = 5
           retry_interval = "15s"
         }

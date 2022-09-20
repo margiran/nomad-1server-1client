@@ -16,7 +16,13 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-variable "server_count" {
+variable "consul_server_count" {
+  description = "The number of consul servers"
+  type        = number
+  default     = 2
+}
+
+variable "nomad_server_count" {
   description = "The number of servers"
   type        = number
   default     = 2
