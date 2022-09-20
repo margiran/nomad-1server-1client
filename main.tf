@@ -31,6 +31,15 @@ resource "random_pet" "pet" {
 resource "aws_security_group" "instances" {
   name   = "${var.security_group_name}-${random_pet.pet.id}"
   vpc_id = data.aws_vpc.default.id
+
+  # opening port used by consul
+  ingress {
+    from_port   = 8500
+    to_port     = 8500
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # opening port used by nomad agents 
   ingress {
     from_port   = 4646
@@ -66,6 +75,27 @@ resource "aws_security_group" "instances" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_instance" "consul_server" {
+  count                  = var.consul_server_count
+  ami                    = var.ami
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [aws_security_group.instances.id]
+  iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
+  key_name               = aws_key_pair.generated_key.key_name
+  root_block_device {
+    volume_size = 100
+    volume_type = "io1"
+    iops        = 1000
+  }
+  user_data = templatefile("cloudinit_consul_server.yaml", {
+    consul_bootstrap_expect = var.consul_server_count,
+    consul_retry_join       = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}"
+  })
+  tags = {
+    Name = "consul_server_${random_pet.pet.id}"
   }
 }
 
