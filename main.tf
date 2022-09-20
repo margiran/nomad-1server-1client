@@ -69,7 +69,7 @@ resource "aws_security_group" "instances" {
   }
 }
 
-resource "aws_instance" "server" {
+resource "aws_instance" "nomad_server" {
   count                  = var.nomad_server_count
   ami                    = var.ami
   instance_type          = var.instance_type
@@ -81,7 +81,7 @@ resource "aws_instance" "server" {
     volume_type = "io1"
     iops        = 1000
   }
-  user_data = templatefile("cloudinit_server.yaml", {
+  user_data = templatefile("cloudinit_nomad_server.yaml", {
     nomad_bootstrap_expect = var.nomad_server_count,
     nomad_retry_join       = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
   })
