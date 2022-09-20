@@ -46,8 +46,28 @@ for simplicity we generate the ssh command in an output, so try following comman
 ```
 terraform output ssh_nomad_server_public_ip
 ```
- 
+
+### Run Nomad sample job
+
+- get NOMAD_ADDR for server 
+
+```
+terraform output nomad_addr_nomad_server_public_ip
+```
+
+- set NOMAD_ADDR variable ( get one of the server address )
+
+```
+export NOMAD_ADDR=http://10.10.10.10:4646
+```
+
+- run nomad sample job
+
+```
+nomad run example.nomad
+```
 ### Clean up when you're done:
+
 ```
 terraform destroy
 ```
