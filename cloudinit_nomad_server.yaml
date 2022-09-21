@@ -2,6 +2,17 @@
 write_files:
   - content: |
       # server config file
+      datacenter = "aws"
+      data_dir = "/opt/consul"
+      client_addr = "0.0.0.0"
+      bind_addr = "0.0.0.0"
+      advertise_addr = "{{GetInterfaceIP \"eth0\"}}"
+      advertise_addr_wan = "{{GetInterfaceIP \"eth0\"}}"
+      retry_join = ["${consul_retry_join}"]
+    permissions: '0750'
+    path: /etc/consul.hcl.cloud_init
+  - content: |
+      # server config file
       datacenter="aws"
       data_dir  = "/opt/nomad/data"
       bind_addr = "0.0.0.0"
@@ -25,6 +36,13 @@ runcmd:
   - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
   - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
   - sudo apt-get update
+  - sudo apt-get install -y consul
+  - sudo cp /etc/consul.d/consul.hcl /etc/consul.hcl.apt
+  - sudo cp /etc/consul.hcl.cloud_init /etc/consul.d/consul.hcl
+  - sudo chown consul:consul /etc/consul.d/consul.hcl
+  - sudo systemctl enable consul
+  - sudo systemctl stop consul
+  - sudo systemctl start consul
   - sudo apt-get install -y nomad
   - sudo cp /etc/nomad.d/nomad.hcl /etc/nomad.hcl.apt
   - sudo cp /etc/nomad.hcl.cloud_init /etc/nomad.d/nomad.hcl
