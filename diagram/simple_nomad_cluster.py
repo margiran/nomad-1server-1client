@@ -6,13 +6,19 @@ from diagrams import Cluster, Diagram, Edge
 from diagrams.custom import Custom
 from diagrams.aws.compute import EC2
 from diagrams.onprem.compute import Nomad
+from diagrams.onprem.network import Consul
 
 with Diagram("Simple Nomad cluster", show=False):
 
     with Cluster("VPC"):
         with Cluster("SubNet"):
-            n_server1 = Nomad("Nomad server1")
-            n_server2 = Nomad("Nomad server2")
-            n_client = Nomad("Client")
+            with Cluster("Consul"):
+                c_server = Consul("Consul cluster")
 
-            [ n_server1, n_server2] - n_client
+            with Cluster("Nomad"):
+                n_server = Nomad("Nomad cluster")
+                n_client = Nomad("Client")
+
+            [ n_server] - n_client
+
+            c_server - [ n_server, n_client ]
