@@ -10,6 +10,8 @@ write_files:
       }
       server = true
       bind_addr = "0.0.0.0"
+      advertise_addr = "{{GetInterfaceIP \"eth0\"}}"
+      advertise_addr_wan = "{{GetInterfaceIP \"eth0\"}}"
       bootstrap_expect = ${consul_bootstrap_expect}
       retry_join = ["${consul_retry_join}"]
     permissions: '0750'
