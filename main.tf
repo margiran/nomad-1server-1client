@@ -32,6 +32,13 @@ resource "aws_security_group" "instances" {
   name   = "${var.security_group_name}-${random_pet.pet.id}"
   vpc_id = data.aws_vpc.default.id
 
+  # opening port used by vault
+  ingress {
+    from_port   = 8200
+    to_port     = 8200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   # opening port used by consul
   ingress {
     from_port   = 8300

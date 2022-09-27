@@ -81,6 +81,13 @@ output "netdata_nomad_server_public_ip" {
   ]
 }
 
+output "ssh_vault_dev_public_ip" {
+  description = "Command for ssh to the vault_dev public IP of the EC2 Instance"
+  value = [
+    "ssh ubuntu@${aws_instance.vault_dev.public_ip} -i ~/.ssh/terraform.pem"
+  ]
+}
+
 output "ssh_client_public_ip" {
   description = "Command for ssh to the Client public IP of the EC2 Instance"
   value = [
