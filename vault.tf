@@ -9,7 +9,9 @@ resource "aws_instance" "vault_dev" {
     volume_type = "io1"
     iops        = 1000
   }
-  user_data = templatefile("cloudinit_vault_dev.yaml")
+  user_data = templatefile("cloudinit_vault_dev.yaml", {
+    consul_retry_join = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}"
+  })
   tags = {
     Name = "vault_dev_${random_pet.pet.id}"
   }

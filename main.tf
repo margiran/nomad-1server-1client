@@ -24,6 +24,15 @@ resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.private_key.public_key_openssh
 }
 
+data "http" "myip" {
+  url = "https://api.ipify.org"
+}
+
+# the public_ip of my gw
+locals {
+  myip = "${data.http.myip.response_body}/32"
+}
+
 resource "random_pet" "pet" {
   length = 1
 }
@@ -37,14 +46,14 @@ resource "aws_security_group" "instances" {
     from_port   = 8200
     to_port     = 8200
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
   # opening port used by consul
   ingress {
     from_port   = 8300
     to_port     = 8302
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
 
   # opening port used by consul
@@ -52,7 +61,7 @@ resource "aws_security_group" "instances" {
     from_port   = 8500
     to_port     = 8500
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
 
   # opening port used by nomad agents 
@@ -60,21 +69,21 @@ resource "aws_security_group" "instances" {
     from_port   = 4646
     to_port     = 4648
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
   # opening port used by nomad agents 
   ingress {
     from_port   = 4646
     to_port     = 4648
     protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
   # opening port 22 to be able to ssh to the instances
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
   # netdata monitoring
   ingress {
@@ -82,7 +91,7 @@ resource "aws_security_group" "instances" {
     from_port   = 19999
     to_port     = 19999
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [data.aws_vpc.default.cidr_block, local.myip]
   }
   # provide internet access to the instance (install packages, etc)
   egress {
