@@ -13,7 +13,7 @@ macOS users can download the Graphviz via `brew install graphviz` if you're usin
 </sub>
 
 
-## [Installation](https://diagrams.mingrammer.com/docs/getting-started/installation)
+## Installation
 
 using pip(pip3)
 ```
@@ -22,7 +22,9 @@ pip install diagrams
 
 ## Quick start
 
-#### Sample code 
+write your python code, find the document [here](https://diagrams.mingrammer.com/docs/getting-started/installation)
+
+### Sample python code
 
 diagram.py
 ```
@@ -44,4 +46,4 @@ python diagram.py
 
 ### Sample output
 
-![datacenter image](https://github.com/margiran/nomad-one_server-one_client/blob/master/diagram/simple_nomad_cluster.png?raw=true)
+![sample image](https://diagrams.mingrammer.com/img/web_service_diagram.png?raw=true)
