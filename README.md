@@ -66,6 +66,7 @@ export NOMAD_ADDR=http://10.10.10.10:4646
 ```
 nomad run example.nomad
 ```
+
 ### Clean up when you're done:
 
 ```
