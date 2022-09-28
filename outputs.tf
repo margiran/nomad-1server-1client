@@ -101,3 +101,24 @@ output "netdata_client_public_ip" {
     "http://${aws_instance.client.public_ip}:19999"
   ]
 }
+
+output "netdata_vault_dev_public_ip" {
+  description = "Command for netdata to the Server public IP of the EC2 Instance"
+  value = [
+    "http://${aws_instance.vault_dev.public_ip}:19999"
+  ]
+}
+
+output "vault_dev_addr_vault_dev_public_ip" {
+  description = "Command for http to the Server public IP of the EC2 Instance"
+  value = [
+    "export VAULT_ADDR=http://${aws_instance.vault_dev.public_ip}:8200"
+  ]
+}
+
+output "http_vault_dev_public_ip" {
+  description = "Command for http to the Server public IP of the EC2 Instance"
+  value = [
+    "http://${aws_instance.vault_dev.public_ip}:8200"
+  ]
+}

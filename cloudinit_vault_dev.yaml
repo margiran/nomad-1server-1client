@@ -1,9 +1,69 @@
 #cloud-config
 write_files:
   - content: |
-      # client config file
+      # server config file
+      datacenter = "aws"
+      data_dir = "/opt/consul"
+      client_addr = "0.0.0.0"
+      bind_addr = "0.0.0.0"
+      advertise_addr = "{{GetInterfaceIP \"eth0\"}}"
+      advertise_addr_wan = "{{GetInterfaceIP \"eth0\"}}"
+      retry_join = ["${consul_retry_join}"]
+    permissions: '0750'
+    path: /etc/consul.hcl.cloud_init
+  - content: |
+      [Unit]
+      Description=Vault
+      Documentation=https://www.vaultproject.io/docs/
+      Wants=network-online.target
+      After=network-online.target
+      StartLimitIntervalSec=10
+
+      # If you are running Consul, please uncomment following Wants/After configs.
+      # Assuming your Consul service unit name is "consul"
+      Wants=consul.service
+      After=consul.service
+
+      [Service]
+      KillMode=process
+      KillSignal=SIGINT
+      Environment=VAULT_DEV_ROOT_TOKEN_ID=changeme
+      ExecStart=/usr/bin/vault server -config=/etc/vault.d/ -dev -dev-listen-address=0.0.0.0:8200
+      ExecStartPost=/bin/sleep 10
+      ExecStartPost=/usr/bin/vault secrets enable -address=http://127.0.0.1:8200 -version=1 kv
+      ExecStartPost=/usr/bin/vault secrets enable -address=http://127.0.0.1:8200 transit
+      ExecReload=/bin/kill -HUP $MAINPID
+      Restart=on-failure
+      RestartSec=2
+      StartLimitBurst=3
+      LimitNOFILE=65536
+
+      [Install]
+      WantedBy=multi-user.target
+    permissions: '0750'
+    path: /etc/vault.service.cloud_init
+  - content: |
+      "ui" = true
+      "default_lease_ttl" = "168h"
+      "max_lease_ttl" = "720h"
+      "plugin_directory" = "/usr/local/vault/plugins"
+      "disable_mlock" = true
+      storage "inmem" {}
+      telemetry {
+        prometheus_retention_time = "30s",
+        disable_hostname = true
+      }
     permissions: '0750'
     path: /etc/vault.hcl.cloud_init
+  - content: |
+      "service" = {
+        "name" = "vault"
+        "tags" = ["vault-dev"]
+        "port" = 8200
+      }
+    permissions: '0750'
+    path: /etc/vault-service.hcl
+
 runcmd:
   - until ping -c1 archive.ubuntu.com &>/dev/null; do echo "waiting for networking to initialise" ; sleep 3 ; done 
   - curl https://my-netdata.io/kickstart.sh -o /var/tmp/netdata-kickstart.sh
@@ -11,3 +71,19 @@ runcmd:
   - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
   - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
   - sudo apt-get update
+  - sudo apt-get install -y consul
+  - sudo cp /etc/consul.d/consul.hcl /etc/consul.hcl.apt
+  - sudo cp /etc/consul.hcl.cloud_init /etc/consul.d/consul.hcl
+  - sudo chown consul:consul /etc/consul.d/consul.hcl
+  - sudo systemctl enable consul
+  - sudo systemctl stop consul
+  - sudo systemctl start consul  
+  - sudo apt-get install -y vault
+  - sudo cp /usr/lib/systemd/system/vault.service /etc/vault.service.apt
+  - sudo cp /etc/vault.hcl.cloud_init /etc/vault.d/vault.hcl 
+  - sudo chown vault:vault /etc/vault.d/vault.hcl 
+  - sudo cp /etc/vault.service.cloud_init /usr/lib/systemd/system/vault.service
+  - sudo systemctl enable vault.service
+  - sudo systemctl stop vault.service
+  - sudo systemctl start vault.service
+  - sudo consul services register /etc/vault-service.hcl
