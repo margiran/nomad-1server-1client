@@ -19,7 +19,7 @@ using pip(pip3)
 pip install diagrams
 ```
 
-## Generate the diagram:
+## Generate the diagram
 
 ```
 python simple_nomad_cluster.py
