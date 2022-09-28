@@ -1,4 +1,4 @@
-# Diagram as code
+# Diagram as code with Diagrams
 
 [Diagrams](https://diagrams.mingrammer.com/) lets you draw the cloud system architecture in Python code.
 
@@ -12,7 +12,6 @@
 macOS users can download the Graphviz via `brew install graphviz` if you're using Homebrew. Similarly, Windows users with Chocolatey installed can run `choco install graphviz`.
 </sub>
 
-
 ## Installation
 
 using pip(pip3)
@@ -20,30 +19,8 @@ using pip(pip3)
 pip install diagrams
 ```
 
-## Quick start
-
-write your python code, find the document [here](https://diagrams.mingrammer.com/docs/getting-started/installation)
-
-### Sample python code
-
-diagram.py
-```
-# diagram.py
-from diagrams import Diagram
-from diagrams.aws.compute import EC2
-from diagrams.aws.database import RDS
-from diagrams.aws.network import ELB
-
-with Diagram("Web Service", show=False):
-    ELB("lb") >> EC2("web") >> RDS("userdb")
-```
-
-### Generate the diagram:
+## Generate the diagram:
 
 ```
-python diagram.py
+python simple_nomad_cluster.py
 ```
-
-### Sample output
-
-![sample image](https://diagrams.mingrammer.com/img/web_service_diagram.png?raw=true)
