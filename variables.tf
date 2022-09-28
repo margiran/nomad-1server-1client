@@ -4,7 +4,13 @@ variable "security_group_name" {
   default     = "nomad-1server-1client-sg"
 }
 
-variable "instance_type" {
+variable "server_instance_type" {
+  description = "The type of EC2 Instances to run (e.g. t2.micro)"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "client_instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string
   default     = "t2.micro"
