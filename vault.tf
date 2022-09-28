@@ -1,6 +1,6 @@
 resource "aws_instance" "vault_dev" {
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = var.instance_type
+  instance_type          = var.server_instance_type
   vpc_security_group_ids = [aws_security_group.instances.id]
   iam_instance_profile   = aws_iam_instance_profile.instance_profile.name
   key_name               = aws_key_pair.generated_key.key_name
