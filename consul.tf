@@ -15,9 +15,9 @@ resource "aws_instance" "consul_server" {
   }
   user_data = templatefile("cloudinit_consul_server.yaml", {
     consul_bootstrap_expect = var.consul_server_count,
-    consul_retry_join       = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}"
+    consul_retry_join       = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}_${terraform.workspace}"
   })
   tags = {
-    Name = "consul_server_${random_pet.pet.id}"
+    Name = "consul_server_${random_pet.pet.id}_${terraform.workspace}"
   }
 }

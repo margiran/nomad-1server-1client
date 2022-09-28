@@ -10,9 +10,9 @@ resource "aws_instance" "vault_dev" {
     iops        = 1000
   }
   user_data = templatefile("cloudinit_vault_dev.yaml", {
-    consul_retry_join = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}"
+    consul_retry_join = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}_${terraform.workspace}"
   })
   tags = {
-    Name = "vault_dev_${random_pet.pet.id}"
+    Name = "vault_dev_${random_pet.pet.id}_${terraform.workspace}"
   }
 }
