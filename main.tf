@@ -38,7 +38,7 @@ resource "random_pet" "pet" {
 }
 
 resource "aws_security_group" "instances" {
-  name   = "${var.security_group_name}-${random_pet.pet.id}"
+  name   = "${var.security_group_name}-${random_pet.pet.id}_${terraform.workspace}"
   vpc_id = data.aws_vpc.default.id
 
   # opening port used by vault
@@ -128,12 +128,12 @@ resource "aws_instance" "nomad_server" {
     iops        = 1000
   }
   user_data = templatefile("cloudinit_nomad_server.yaml", {
-    consul_retry_join      = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}",
+    consul_retry_join      = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}_${terraform.workspace}",
     nomad_bootstrap_expect = var.nomad_server_count,
-    nomad_retry_join       = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
+    nomad_retry_join       = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}_${terraform.workspace}"
   })
   tags = {
-    Name = "nomad_server_${random_pet.pet.id}"
+    Name = "nomad_server_${random_pet.pet.id}_${terraform.workspace}"
   }
 }
 
@@ -149,10 +149,10 @@ resource "aws_instance" "client" {
     iops        = 1000
   }
   user_data = templatefile("cloudinit_client.yaml", {
-    consul_retry_join = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}",
-    nomad_retry_join  = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}"
+    consul_retry_join = "provider=aws tag_key=Name tag_value=consul_server_${random_pet.pet.id}_${terraform.workspace}",
+    nomad_retry_join  = "provider=aws tag_key=Name tag_value=nomad_server_${random_pet.pet.id}_${terraform.workspace}"
   })
   tags = {
-    Name = "nomad_client_${random_pet.pet.id}"
+    Name = "nomad_client_${random_pet.pet.id}_${terraform.workspace}"
   }
 }

@@ -19,11 +19,11 @@ variable "client_instance_type" {
 variable "consul_server_count" {
   description = "The number of consul servers"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "nomad_server_count" {
   description = "The number of servers"
   type        = number
-  default     = 2
+  default     = 1
 }
