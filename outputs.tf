@@ -47,6 +47,13 @@ output "http_consul_server_public_ip" {
   ]
 }
 
+output "consul_addr_consul_server_public_ip" {
+  description = "Command for http to the Server public IP of the EC2 Instance"
+  value = [
+    for k in aws_instance.consul_server : "export CONSUL_ADDR=http://${k.public_ip}:8500"
+  ]
+}
+
 output "netdata_consul_server_public_ip" {
   description = "Command for netdata to the Server public IP of the EC2 Instance"
   value = [
