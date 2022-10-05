@@ -9,6 +9,12 @@ write_files:
       advertise_addr = "{{GetInterfaceIP \"eth0\"}}"
       advertise_addr_wan = "{{GetInterfaceIP \"eth0\"}}"
       retry_join = ["${consul_retry_join}"]
+      ports {
+        grpc = 8502
+      }
+      connect {
+        enabled = true
+      }
     permissions: '0750'
     path: /etc/consul.hcl.cloud_init
   - content: |
